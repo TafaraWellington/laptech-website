@@ -2,6 +2,7 @@
 
 import { Product } from '@prisma/client'
 import dynamic from 'next/dynamic'
+import Link from 'next/link'
 const PaystackButton = dynamic(() => import('./PaystackButton'), { ssr: false })
 
 type ProductUI = {
@@ -35,6 +36,7 @@ export default function ProductCard({ product }: { product: ProductUI }) {
 
   return (
     <div className={`group flex flex-col h-full relative bg-slate-900/40 backdrop-blur-md rounded-2xl border border-slate-800/80 ${theme.border} transition-all duration-500 overflow-hidden shadow-xl hover:shadow-[0_0_35px_rgba(30,41,59,0.5)]`}>
+      <Link href={`/product/${product.id}`} className="absolute inset-0 z-0" aria-label={`View details for ${product.brand} ${product.model}`}></Link>
       
       {product.isNew && (
         <div className="absolute top-4 right-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-[10px] font-extrabold px-3 py-1 rounded-full z-10 shadow-lg tracking-wider">
@@ -138,7 +140,7 @@ export default function ProductCard({ product }: { product: ProductUI }) {
             </div>
           </div>
           
-          <div className="flex gap-2">
+          <div className="flex gap-2 relative z-10">
             <a href={`https://wa.me/27615246470?text=Hi Laptech, I am interested in the ${product.brand} ${product.model} for R${product.promoPrice}`} 
                target="_blank" 
                rel="noreferrer"

@@ -1,7 +1,7 @@
 import Hero from "@/components/Hero";
 import Services from "@/components/Services";
+import ProductCatalog from "@/components/ProductCatalog";
 import Testimonials from "@/components/Testimonials";
-import ProductCard from "@/components/ProductCard";
 import { PrismaClient } from "@prisma/client";
 
 // Re-use the mock data from seed script as a fallback in case DB is not connected yet
@@ -89,20 +89,9 @@ export default async function Home() {
       <Hero />
       <Services />
       <section id="deals" className="py-20 bg-[#0b0f19]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-5xl font-extrabold text-white mb-4">
-              LAPTECH <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-yellow-600">DEALS</span>
-            </h2>
-            <p className="text-gray-400 text-lg">Limited Stock — First Come, First Served!</p>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {products.map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))}
-          </div>
+        <ProductCatalog initialProducts={products} />
 
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mt-20 border border-gray-800 rounded-2xl bg-gray-900/50 p-8 grid grid-cols-1 md:grid-cols-3 gap-8 text-center divide-y md:divide-y-0 md:divide-x divide-gray-800">
             <div className="pt-4 md:pt-0">
               <div className="text-4xl mb-4">🛡️</div>
