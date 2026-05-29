@@ -1,4 +1,5 @@
 import Hero from "@/components/Hero";
+import Services from "@/components/Services";
 import ProductCard from "@/components/ProductCard";
 import { PrismaClient } from "@prisma/client";
 
@@ -85,6 +86,7 @@ export default async function Home() {
   return (
     <>
       <Hero />
+      <Services />
       <section id="deals" className="py-20 bg-[#0b0f19]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">

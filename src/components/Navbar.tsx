@@ -25,6 +25,9 @@ export default function Navbar() {
             <Link href="/" className="text-slate-300 hover:text-white hover:scale-105 transition-all duration-300 relative py-1 after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-blue-500 hover:after:w-full after:transition-all after:duration-300">
               Home
             </Link>
+            <Link href="#services" className="text-slate-300 hover:text-white hover:scale-105 transition-all duration-300 relative py-1 after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-blue-500 hover:after:w-full after:transition-all after:duration-300">
+              Our Services
+            </Link>
             <Link href="#deals" className="text-slate-300 hover:text-white hover:scale-105 transition-all duration-300 relative py-1 after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-blue-500 hover:after:w-full after:transition-all after:duration-300">
               Laptop Deals
             </Link>

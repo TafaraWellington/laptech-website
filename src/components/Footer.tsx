@@ -16,24 +16,30 @@ export default function Footer() {
         </div>
         
         <div className="space-y-4">
-          <h4 className="text-sm font-bold text-white uppercase tracking-wider">Contact Info</h4>
+          <h4 className="text-sm font-bold text-white uppercase tracking-wider">Corporate Office</h4>
           <ul className="space-y-3 text-sm">
-            <li className="flex items-center gap-2">
+            <li className="flex items-start gap-2.5">
+              <span className="text-blue-500 text-xs mt-1">📍</span>
+              <span className="leading-relaxed">
+                Unit 14, The Home Gallery, 28-48 Richards Drive, Midrand, South Africa
+              </span>
+            </li>
+            <li className="flex items-center gap-2.5">
               <span className="text-blue-500 text-xs">✉</span>
               <a href="mailto:james@laptechitsolutions.co.za" className="hover:text-blue-400 transition-colors">
                 james@laptechitsolutions.co.za
               </a>
             </li>
-            <li className="flex items-center gap-2">
+            <li className="flex items-center gap-2.5">
               <span className="text-emerald-500 text-xs">☎</span>
-              <a href="https://wa.me/27614916636" className="hover:text-emerald-400 transition-colors">
-                +27 61 491 6636 (WhatsApp)
+              <a href="https://wa.me/27614916636" className="hover:text-emerald-400 transition-colors font-semibold">
+                +27 61 491 6636 (Cell / WhatsApp)
               </a>
             </li>
-            <li className="flex items-center gap-2">
+            <li className="flex items-center gap-2.5">
               <span className="text-emerald-500 text-xs">☎</span>
               <a href="https://wa.me/27615246470" className="hover:text-emerald-400 transition-colors">
-                +27 61 524 6470 (WhatsApp)
+                +27 61 524 6470 (Sales / Support)
               </a>
             </li>
           </ul>
