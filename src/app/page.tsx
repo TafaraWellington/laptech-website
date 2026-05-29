@@ -1,5 +1,6 @@
 import Hero from "@/components/Hero";
 import Services from "@/components/Services";
+import Testimonials from "@/components/Testimonials";
 import ProductCard from "@/components/ProductCard";
 import { PrismaClient } from "@prisma/client";
 
@@ -121,6 +122,7 @@ export default async function Home() {
           </div>
         </div>
       </section>
+      <Testimonials />
     </>
   );
 }
