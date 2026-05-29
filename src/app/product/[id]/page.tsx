@@ -1,7 +1,7 @@
 import { PrismaClient } from "@prisma/client";
+export const dynamic = 'force-dynamic';
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import dynamic from 'next/dynamic'
 
 const mockProducts = [
   {
@@ -26,9 +26,7 @@ const mockProducts = [
   }
 ];
 
-const PaystackButton = dynamic(() => import('@/components/PaystackButton'), { ssr: false })
-
-const prisma = new PrismaClient();
+import PaystackButton from '@/components/PaystackButton';
 
 // Helper to determine neon glow theme color based on laptop brand (reused from ProductCard for consistency)
 const getBrandTheme = (brand: string) => {
@@ -42,6 +40,7 @@ const getBrandTheme = (brand: string) => {
 
 export default async function ProductPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
+  const prisma = new PrismaClient();
 
   let product: any = null;
 

@@ -1,10 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
+
+export const dynamic = 'force-dynamic';
 import { PrismaClient } from "@prisma/client";
 
-const prisma = new PrismaClient();
+const getPrisma = () => new PrismaClient();
 
 // GET: Fetch all products from MySQL database
 export async function GET() {
+  const prisma = getPrisma();
   try {
     const products = await prisma.product.findMany({
       orderBy: { createdAt: "desc" }
@@ -18,6 +21,7 @@ export async function GET() {
 
 // POST: Create a new product in the database
 export async function POST(req: NextRequest) {
+  const prisma = getPrisma();
   try {
     const body = await req.json();
     
@@ -54,6 +58,7 @@ export async function POST(req: NextRequest) {
 
 // PUT: Update an existing product
 export async function PUT(req: NextRequest) {
+  const prisma = getPrisma();
   try {
     const body = await req.json();
     const { id, brand, model, promoPrice, quantity } = body;
@@ -90,6 +95,7 @@ export async function PUT(req: NextRequest) {
 
 // DELETE: Delete a product from the database
 export async function DELETE(req: NextRequest) {
+  const prisma = getPrisma();
   try {
     const { searchParams } = new URL(req.url);
     const id = searchParams.get("id");
