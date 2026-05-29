@@ -40,6 +40,12 @@ export default function Navbar() {
           </div>
           
           <div className="flex items-center space-x-4">
+            <Link 
+              href="/admin" 
+              className="hidden md:flex items-center gap-2 text-slate-400 hover:text-white text-xs font-bold uppercase tracking-widest transition-colors"
+            >
+              <span>⚙️</span> Admin
+            </Link>
             <a 
               href="https://wa.me/c/27615246470" 
               target="_blank" 
