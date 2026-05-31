@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const services = [
   {
@@ -75,7 +75,47 @@ const services = [
 
 export default function Services() {
   const [activeTab, setActiveTab] = useState("hardware");
+  const [images, setImages] = useState<Record<string, string[]>>({});
+  const [currentSlide, setCurrentSlide] = useState(0);
+
   const activeService = services.find((s) => s.id === activeTab) || services[0];
+
+  useEffect(() => {
+    fetch('/api/images')
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          setImages(data.images);
+        }
+      })
+      .catch(console.error);
+  }, []);
+
+  const getActiveImages = () => {
+    const map: Record<string, string> = {
+      hardware: "products",
+      schools: "schools",
+      servers: "servers",
+      repairs: "repairs"
+    };
+    return images[map[activeTab]] || [];
+  };
+
+  const activeImages = getActiveImages();
+
+  // Reset slide when changing tabs
+  useEffect(() => {
+    setCurrentSlide(0);
+  }, [activeTab]);
+
+  // Auto slider
+  useEffect(() => {
+    if (activeImages.length <= 1) return;
+    const interval = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % activeImages.length);
+    }, 3500);
+    return () => clearInterval(interval);
+  }, [activeImages.length, currentSlide]);
 
   return (
     <section id="services" className="py-24 bg-[#090d16] relative border-b border-slate-900/60 overflow-hidden">
@@ -143,6 +183,41 @@ export default function Services() {
               <p className="text-slate-400 text-sm sm:text-base leading-relaxed">
                 {activeService.description}
               </p>
+
+              {/* Sliding Photo Banner under description */}
+              {activeImages.length > 0 ? (
+                <div className="relative w-full h-48 sm:h-56 rounded-xl overflow-hidden shadow-lg border border-slate-700/50 group">
+                  <div 
+                    className="flex h-full transition-transform duration-700 ease-in-out"
+                    style={{ transform: `translateX(-${currentSlide * 100}%)` }}
+                  >
+                    {activeImages.map((img, idx) => (
+                      <img 
+                        key={idx} 
+                        src={img} 
+                        alt={`${activeService.title} preview ${idx + 1}`}
+                        className="w-full h-full object-cover shrink-0"
+                      />
+                    ))}
+                  </div>
+                  {activeImages.length > 1 && (
+                    <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2 z-10 bg-black/40 px-3 py-1.5 rounded-full backdrop-blur-sm">
+                      {activeImages.map((_, idx) => (
+                        <button
+                          key={idx}
+                          onClick={() => setCurrentSlide(idx)}
+                          className={`w-2 h-2 rounded-full transition-all duration-300 ${currentSlide === idx ? 'bg-blue-400 w-4' : 'bg-white/50 hover:bg-white'}`}
+                        />
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <div className="w-full h-24 rounded-xl bg-slate-900/50 border border-slate-800/80 border-dashed flex flex-col items-center justify-center text-slate-500">
+                  <span className="text-xl mb-1">📸</span>
+                  <span className="text-[10px] uppercase tracking-widest font-semibold">Images pending upload</span>
+                </div>
+              )}
 
               {/* Service Features Checklist */}
               <div className="space-y-2 pt-2">
