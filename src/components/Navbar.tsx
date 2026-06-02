@@ -47,7 +47,9 @@ export default function Navbar() {
               <span>⚙️</span> Admin
             </Link>
             <a 
-              href="#deals" 
+              href="https://whatsapp.com/channel/0029VbCNwgz4dTnHwkSxvX2S" 
+              target="_blank"
+              rel="noreferrer"
               className="relative overflow-hidden bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white px-5 py-2.5 rounded-xl font-bold text-xs tracking-wider uppercase transition-all duration-300 transform active:scale-95 shadow-[0_0_15px_rgba(16,185,129,0.2)] hover:shadow-[0_0_20px_rgba(16,185,129,0.4)]"
             >
               View live catalog
