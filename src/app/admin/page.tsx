@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import { formatPrice } from "@/lib/utils";
 
 type GalleryImages = Record<string, string[]>;
 
@@ -658,11 +659,11 @@ function AdminDashboardContent() {
                           <td className="p-5 text-right font-semibold text-white">
                             {product.originalPrice && (
                               <div className="text-[10px] text-slate-500 line-through">
-                                R{product.originalPrice.toLocaleString()}
+                                R{formatPrice(product.originalPrice)}
                               </div>
                             )}
                             <div className="text-amber-400 font-extrabold">
-                              R{product.promoPrice.toLocaleString()}
+                              R{formatPrice(product.promoPrice)}
                             </div>
                           </td>
 

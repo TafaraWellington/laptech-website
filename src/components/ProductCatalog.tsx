@@ -3,6 +3,8 @@
 import { useState, useMemo } from "react";
 import ProductCard from "./ProductCard";
 
+import { formatPrice } from "@/lib/utils";
+
 type Product = {
   id: string;
   brand: string;
@@ -145,7 +147,7 @@ export default function ProductCatalog({ initialProducts }: { initialProducts: P
           <div>
             <div className="flex justify-between mb-2">
               <label className="block text-xs font-bold text-slate-400 uppercase tracking-widest">Max Price</label>
-              <span className="text-xs font-bold text-amber-400">R{maxPrice.toLocaleString()}</span>
+              <span className="text-xs font-bold text-amber-400">R{formatPrice(maxPrice)}</span>
             </div>
             <input 
               type="range" 

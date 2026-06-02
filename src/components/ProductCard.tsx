@@ -3,6 +3,7 @@
 
 import dynamic from 'next/dynamic'
 import Link from 'next/link'
+import { formatPrice } from '@/lib/utils'
 const PaystackButton = dynamic(() => import('./PaystackButton'), { ssr: false })
 
 type ProductUI = {
@@ -132,11 +133,11 @@ export default function ProductCard({ product }: { product: ProductUI }) {
           <div>
             {product.originalPrice && product.originalPrice > (product.promoPrice || 0) && (
               <div className="text-slate-500 text-[10px] line-through mb-0.5 tracking-wide">
-                R{product.originalPrice.toLocaleString()}
+                R{formatPrice(product.originalPrice)}
               </div>
             )}
             <div className="text-xl font-extrabold text-amber-400 tracking-tight">
-              R{(product.promoPrice || product.originalPrice || 0).toLocaleString()}
+              R{formatPrice(product.promoPrice || product.originalPrice || 0)}
             </div>
           </div>
           

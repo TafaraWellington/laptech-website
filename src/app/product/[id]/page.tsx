@@ -3,6 +3,7 @@ export const dynamic = 'force-dynamic';
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import ProductImageCarousel from "@/components/ProductImageCarousel";
+import { formatPrice } from "@/lib/utils";
 
 const mockProducts = [
   {
@@ -155,11 +156,11 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
                 <div className="text-slate-400 text-sm font-semibold tracking-wider uppercase mb-1">Our Price</div>
                 <div className="flex items-end gap-3">
                   <span className="text-4xl font-extrabold text-amber-400 tracking-tight">
-                    R{(product.promoPrice || product.originalPrice || 0).toLocaleString()}
+                    R{formatPrice(product.promoPrice || product.originalPrice || 0)}
                   </span>
                   {product.originalPrice && product.originalPrice > (product.promoPrice || 0) && (
                     <span className="text-slate-500 text-lg line-through mb-1 font-medium">
-                      R{product.originalPrice.toLocaleString()}
+                      R{formatPrice(product.originalPrice)}
                     </span>
                   )}
                 </div>
