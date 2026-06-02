@@ -1,7 +1,8 @@
-import { PrismaClient } from "@prisma/client";
+import { supabase } from "@/lib/supabase";
 export const dynamic = 'force-dynamic';
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import ProductImageCarousel from "@/components/ProductImageCarousel";
 
 const mockProducts = [
   {
@@ -40,17 +41,20 @@ const getBrandTheme = (brand: string) => {
 
 export default async function ProductPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const prisma = new PrismaClient();
-
   let product: any = null;
 
   try {
-    // Try to fetch from DB
-    product = await prisma.product.findUnique({
-      where: { id: id }
-    });
+    // Try to fetch from Supabase DB
+    const { data, error } = await supabase
+      .from('Product')
+      .select('*')
+      .eq('id', id)
+      .single();
+      
+    if (error) throw error;
+    product = data;
   } catch (error) {
-    console.error("Database connection failed, falling back to mock data");
+    console.error("Supabase connection failed, falling back to mock data", error);
   }
 
   // Fallback to mock data if DB is empty or fails
@@ -84,27 +88,36 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
             
             <div className="absolute w-64 h-64 rounded-full bg-blue-500/20 blur-3xl"></div>
 
-            {/* High-fidelity Vector Device mockup (scaled up) */}
-            <div className="relative w-80 h-56 flex flex-col items-center justify-end z-10 scale-125 md:scale-150">
-              <div className="relative w-72 h-44 bg-slate-950 rounded-lg border-2 border-slate-700 p-2 shadow-[0_10px_40px_rgba(0,0,0,0.8)] flex flex-col justify-between overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-tr from-blue-500/10 via-transparent to-cyan-500/5"></div>
-                <div className="flex justify-between items-center z-10">
-                  <span className={`text-xs font-mono tracking-widest font-semibold ${theme.text}`}>{product.brand}</span>
-                  <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></div>
+            {/* High-fidelity Vector Device mockup (scaled up) or Image Carousel */}
+            {product.id === "1" || product.model.includes("Workstation Precision") ? (
+              <ProductImageCarousel images={[
+                "/uploads/Laptech deals/Dell Precision 3560 No1 (1).png",
+                "/uploads/Laptech deals/Dell Precision 3560 No1 (2).png",
+                "/uploads/Laptech deals/Dell Precision 3560 No1 (3).png",
+                "/uploads/Laptech deals/Dell Precision 3560 No1 (4).png"
+              ]} />
+            ) : (
+              <div className="relative w-80 h-56 flex flex-col items-center justify-end z-10 scale-125 md:scale-150">
+                <div className="relative w-72 h-44 bg-slate-950 rounded-lg border-2 border-slate-700 p-2 shadow-[0_10px_40px_rgba(0,0,0,0.8)] flex flex-col justify-between overflow-hidden">
+                  <div className="absolute inset-0 bg-gradient-to-tr from-blue-500/10 via-transparent to-cyan-500/5"></div>
+                  <div className="flex justify-between items-center z-10">
+                    <span className={`text-xs font-mono tracking-widest font-semibold ${theme.text}`}>{product.brand}</span>
+                    <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></div>
+                  </div>
+                  
+                  <div className="w-full space-y-2 z-10 mb-2">
+                    <div className="h-2 w-2/3 bg-slate-800 rounded"></div>
+                    <div className="h-1.5 w-full bg-slate-800/50 rounded"></div>
+                    <div className="h-1.5 w-1/2 bg-slate-800/50 rounded"></div>
+                  </div>
                 </div>
                 
-                <div className="w-full space-y-2 z-10 mb-2">
-                  <div className="h-2 w-2/3 bg-slate-800 rounded"></div>
-                  <div className="h-1.5 w-full bg-slate-800/50 rounded"></div>
-                  <div className="h-1.5 w-1/2 bg-slate-800/50 rounded"></div>
+                <div className="w-80 h-3 bg-slate-800 rounded-t-sm border-t border-slate-600 relative z-20"></div>
+                <div className="w-80 h-4 bg-gradient-to-b from-slate-700 to-slate-900 rounded-b-lg shadow-xl border-b-2 border-slate-950 flex justify-center relative z-20">
+                  <div className="w-16 h-2 bg-slate-800/80 rounded-b-sm border-t border-slate-950/20"></div>
                 </div>
               </div>
-              
-              <div className="w-80 h-3 bg-slate-800 rounded-t-sm border-t border-slate-600 relative z-20"></div>
-              <div className="w-80 h-4 bg-gradient-to-b from-slate-700 to-slate-900 rounded-b-lg shadow-xl border-b-2 border-slate-950 flex justify-center relative z-20">
-                <div className="w-16 h-2 bg-slate-800/80 rounded-b-sm border-t border-slate-950/20"></div>
-              </div>
-            </div>
+            )}
 
             {product.isNew && (
               <div className="absolute top-6 right-6 bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-xs font-extrabold px-4 py-1.5 rounded-full z-10 shadow-lg tracking-widest">

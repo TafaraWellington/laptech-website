@@ -1,9 +1,10 @@
 import Hero from "@/components/Hero";
 export const dynamic = 'force-dynamic';
+import AboutUs from "@/components/AboutUs";
 import Services from "@/components/Services";
 import ProductCatalog from "@/components/ProductCatalog";
 import Testimonials from "@/components/Testimonials";
-import { PrismaClient } from "@prisma/client";
+import { supabase } from "@/lib/supabase";
 
 // Re-use the mock data from seed script as a fallback in case DB is not connected yet
 const mockProducts = [
@@ -68,15 +69,16 @@ export default async function Home() {
   let products = [];
   
   try {
-    const prisma = new PrismaClient();
-    products = await prisma.product.findMany({
-      orderBy: { promoPrice: 'desc' }
-    });
-    // Disconnect to avoid exhausting connections in dev
-    await prisma.$disconnect();
+    const { data, error } = await supabase
+      .from('Product')
+      .select('*')
+      .order('promoPrice', { ascending: false });
+
+    if (error) throw error;
+    products = data || [];
   } catch (error) {
-    console.error("Database connection failed, falling back to mock data");
-    // Fallback to mock data if database isn't running yet
+    console.error("Supabase connection failed, falling back to mock data", error);
+    // Fallback to mock data if database isn't configured yet
     products = mockProducts as any[];
   }
 
@@ -88,6 +90,7 @@ export default async function Home() {
   return (
     <>
       <Hero />
+      <AboutUs />
       <Services />
       <section id="deals" className="py-20 bg-[#0b0f19]">
         <ProductCatalog initialProducts={products} />

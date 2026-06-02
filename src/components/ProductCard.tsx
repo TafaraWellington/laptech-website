@@ -1,6 +1,6 @@
 "use client";
 
-import { Product } from '@prisma/client'
+
 import dynamic from 'next/dynamic'
 import Link from 'next/link'
 const PaystackButton = dynamic(() => import('./PaystackButton'), { ssr: false })

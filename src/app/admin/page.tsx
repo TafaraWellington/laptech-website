@@ -21,7 +21,7 @@ type Product = {
   isNew: boolean;
 };
 
-export default function AdminDashboard() {
+function AdminDashboardContent() {
   const [activeTab, setActiveTab] = useState<"products" | "media">("products");
   
   // Media Tab State
@@ -911,4 +911,61 @@ export default function AdminDashboard() {
       </div>
     </div>
   );
+}
+
+export default function AdminDashboard() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [passwordInput, setPasswordInput] = useState("");
+  const [error, setError] = useState(false);
+
+  const handleLogin = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (passwordInput === "Laptechit@123") {
+      setIsAuthenticated(true);
+      setError(false);
+    } else {
+      setError(true);
+    }
+  };
+
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen bg-[#080d16] flex items-center justify-center text-white px-4">
+        <div className="max-w-md w-full bg-slate-900/40 backdrop-blur-md border border-slate-800/80 p-8 rounded-3xl shadow-2xl">
+          <div className="text-center mb-8">
+            <div className="inline-flex items-center gap-2 bg-blue-950/45 border border-blue-500/20 text-blue-300 px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider mb-3">
+              👑 Restricted Area
+            </div>
+            <h1 className="text-3xl font-black text-white tracking-tight">
+              ADMIN <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-500">LOGIN</span>
+            </h1>
+          </div>
+          
+          <form onSubmit={handleLogin} className="space-y-6">
+            <div>
+              <label className="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">Password</label>
+              <input
+                type="password"
+                value={passwordInput}
+                onChange={(e) => setPasswordInput(e.target.value)}
+                className={`w-full bg-slate-950 border ${error ? "border-red-500" : "border-slate-800 focus:border-blue-500"} rounded-xl px-4 py-3 text-sm outline-none transition-all`}
+                placeholder="Enter admin password"
+                autoFocus
+              />
+              {error && <p className="text-red-500 text-xs mt-2 font-semibold">Incorrect password. Please try again.</p>}
+            </div>
+            
+            <button
+              type="submit"
+              className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold text-xs uppercase tracking-widest px-8 py-4 rounded-xl cursor-pointer transition-all active:scale-95 shadow-md"
+            >
+              Access Dashboard
+            </button>
+          </form>
+        </div>
+      </div>
+    );
+  }
+
+  return <AdminDashboardContent />;
 }

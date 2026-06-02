@@ -25,14 +25,14 @@ export default function Navbar() {
             <Link href="/" className="text-slate-300 hover:text-white hover:scale-105 transition-all duration-300 relative py-1 after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-blue-500 hover:after:w-full after:transition-all after:duration-300">
               Home
             </Link>
+            <Link href="#about" className="text-slate-300 hover:text-white hover:scale-105 transition-all duration-300 relative py-1 after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-blue-500 hover:after:w-full after:transition-all after:duration-300">
+              About Us
+            </Link>
             <Link href="#services" className="text-slate-300 hover:text-white hover:scale-105 transition-all duration-300 relative py-1 after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-blue-500 hover:after:w-full after:transition-all after:duration-300">
               Our Services
             </Link>
             <Link href="#deals" className="text-slate-300 hover:text-white hover:scale-105 transition-all duration-300 relative py-1 after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-blue-500 hover:after:w-full after:transition-all after:duration-300">
               Laptop Deals
-            </Link>
-            <Link href="#testimonials" className="text-slate-300 hover:text-white hover:scale-105 transition-all duration-300 relative py-1 after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-blue-500 hover:after:w-full after:transition-all after:duration-300">
-              Reviews
             </Link>
             <Link href="#contact" className="text-slate-300 hover:text-white hover:scale-105 transition-all duration-300 relative py-1 after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-blue-500 hover:after:w-full after:transition-all after:duration-300">
               Contact
@@ -47,12 +47,10 @@ export default function Navbar() {
               <span>⚙️</span> Admin
             </Link>
             <a 
-              href="https://wa.me/c/27615246470" 
-              target="_blank" 
-              rel="noreferrer" 
+              href="#deals" 
               className="relative overflow-hidden bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white px-5 py-2.5 rounded-xl font-bold text-xs tracking-wider uppercase transition-all duration-300 transform active:scale-95 shadow-[0_0_15px_rgba(16,185,129,0.2)] hover:shadow-[0_0_20px_rgba(16,185,129,0.4)]"
             >
-              WhatsApp Us
+              View live catalog
             </a>
           </div>
         </div>

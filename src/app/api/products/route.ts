@@ -1,27 +1,25 @@
 import { NextRequest, NextResponse } from "next/server";
-
 export const dynamic = 'force-dynamic';
-import { PrismaClient } from "@prisma/client";
+import { supabase } from "@/lib/supabase";
 
-const getPrisma = () => new PrismaClient();
-
-// GET: Fetch all products from MySQL database
+// GET: Fetch all products from Supabase database
 export async function GET() {
-  const prisma = getPrisma();
   try {
-    const products = await prisma.product.findMany({
-      orderBy: { createdAt: "desc" }
-    });
-    return NextResponse.json({ success: true, products });
+    const { data, error } = await supabase
+      .from('Product')
+      .select('*')
+      .order('createdAt', { ascending: false });
+
+    if (error) throw error;
+    return NextResponse.json({ success: true, products: data || [] });
   } catch (error: any) {
-    console.error("Prisma product fetch failed:", error);
-    return NextResponse.json({ error: "Failed to connect to MySQL database. Ensure your prisma configuration and .env are set up properly." }, { status: 500 });
+    console.error("Supabase product fetch failed:", error);
+    return NextResponse.json({ error: "Failed to connect to Supabase. Ensure your .env keys are correct." }, { status: 500 });
   }
 }
 
 // POST: Create a new product in the database
 export async function POST(req: NextRequest) {
-  const prisma = getPrisma();
   try {
     const body = await req.json();
     
@@ -31,8 +29,9 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Brand, Model, Promo Price, and Quantity are required." }, { status: 400 });
     }
 
-    const newProduct = await prisma.product.create({
-      data: {
+    const { data, error } = await supabase
+      .from('Product')
+      .insert([{
         brand,
         model,
         processor: body.processor || null,
@@ -46,19 +45,21 @@ export async function POST(req: NextRequest) {
         quantity: parseInt(quantity),
         imageUrl: body.imageUrl || null,
         isNew: !!body.isNew
-      }
-    });
+      }])
+      .select()
+      .single();
 
-    return NextResponse.json({ success: true, product: newProduct });
+    if (error) throw error;
+
+    return NextResponse.json({ success: true, product: data });
   } catch (error: any) {
     console.error("Failed to add product:", error);
-    return NextResponse.json({ error: error.message || "Failed to create product in MySQL database." }, { status: 500 });
+    return NextResponse.json({ error: error.message || "Failed to create product in Supabase database." }, { status: 500 });
   }
 }
 
 // PUT: Update an existing product
 export async function PUT(req: NextRequest) {
-  const prisma = getPrisma();
   try {
     const body = await req.json();
     const { id, brand, model, promoPrice, quantity } = body;
@@ -67,9 +68,9 @@ export async function PUT(req: NextRequest) {
       return NextResponse.json({ error: "ID, Brand, Model, Promo Price, and Quantity are required for updates." }, { status: 400 });
     }
 
-    const updatedProduct = await prisma.product.update({
-      where: { id },
-      data: {
+    const { data, error } = await supabase
+      .from('Product')
+      .update({
         brand,
         model,
         processor: body.processor || null,
@@ -83,10 +84,14 @@ export async function PUT(req: NextRequest) {
         quantity: parseInt(quantity),
         imageUrl: body.imageUrl || null,
         isNew: !!body.isNew
-      }
-    });
+      })
+      .eq('id', id)
+      .select()
+      .single();
 
-    return NextResponse.json({ success: true, product: updatedProduct });
+    if (error) throw error;
+
+    return NextResponse.json({ success: true, product: data });
   } catch (error: any) {
     console.error("Failed to update product:", error);
     return NextResponse.json({ error: error.message || "Failed to update product in database." }, { status: 500 });
@@ -95,7 +100,6 @@ export async function PUT(req: NextRequest) {
 
 // DELETE: Delete a product from the database
 export async function DELETE(req: NextRequest) {
-  const prisma = getPrisma();
   try {
     const { searchParams } = new URL(req.url);
     const id = searchParams.get("id");
@@ -104,9 +108,12 @@ export async function DELETE(req: NextRequest) {
       return NextResponse.json({ error: "Product ID is required." }, { status: 400 });
     }
 
-    await prisma.product.delete({
-      where: { id }
-    });
+    const { error } = await supabase
+      .from('Product')
+      .delete()
+      .eq('id', id);
+
+    if (error) throw error;
 
     return NextResponse.json({ success: true, message: "Product deleted successfully." });
   } catch (error: any) {
