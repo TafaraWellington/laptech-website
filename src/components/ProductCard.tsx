@@ -53,33 +53,36 @@ export default function ProductCard({ product }: { product: ProductUI }) {
         {/* Animated ambient light orb */}
         <div className="absolute w-32 h-32 rounded-full bg-blue-500/10 blur-2xl group-hover:scale-150 transition-transform duration-700 pointer-events-none"></div>
 
-        {/* High-fidelity Vector Device mockup */}
-        <div className="relative w-40 h-28 flex flex-col items-center justify-end transform group-hover:scale-110 group-hover:-translate-y-1.5 transition-all duration-500 ease-out z-10">
-          {/* Laptop Screen */}
-          <div className="relative w-36 h-22 bg-slate-950 rounded-md border border-slate-700 p-1.5 shadow-[0_4px_20px_rgba(0,0,0,0.5)] flex flex-col justify-between overflow-hidden">
-            {/* Screen contents & glowing light */}
-            <div className="absolute inset-0 bg-gradient-to-tr from-blue-500/10 via-transparent to-cyan-500/5 group-hover:opacity-100 transition-opacity duration-300"></div>
-            <div className="flex justify-between items-center z-10">
-              <span className={`text-[8px] font-mono tracking-widest font-semibold ${theme.text}`}>{product.brand}</span>
-              <div className="w-1 h-1 rounded-full bg-emerald-500 animate-pulse"></div>
+        {product.imageUrl ? (
+          <img src={product.imageUrl} alt={product.model} className="w-full h-full object-contain relative z-10 transform group-hover:scale-105 transition-transform duration-500 ease-out" />
+        ) : (
+          <div className="relative w-40 h-28 flex flex-col items-center justify-end transform group-hover:scale-110 group-hover:-translate-y-1.5 transition-all duration-500 ease-out z-10">
+            {/* Laptop Screen */}
+            <div className="relative w-36 h-22 bg-slate-950 rounded-md border border-slate-700 p-1.5 shadow-[0_4px_20px_rgba(0,0,0,0.5)] flex flex-col justify-between overflow-hidden">
+              {/* Screen contents & glowing light */}
+              <div className="absolute inset-0 bg-gradient-to-tr from-blue-500/10 via-transparent to-cyan-500/5 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <div className="flex justify-between items-center z-10">
+                <span className={`text-[8px] font-mono tracking-widest font-semibold ${theme.text}`}>{product.brand}</span>
+                <div className="w-1 h-1 rounded-full bg-emerald-500 animate-pulse"></div>
+              </div>
+              
+              {/* Mock graphics element */}
+              <div className="w-full space-y-1 z-10 mb-1">
+                <div className="h-1.5 w-2/3 bg-slate-800 rounded"></div>
+                <div className="h-1 w-full bg-slate-800/50 rounded"></div>
+                <div className="h-1 w-1/2 bg-slate-800/50 rounded"></div>
+              </div>
             </div>
             
-            {/* Mock graphics element */}
-            <div className="w-full space-y-1 z-10 mb-1">
-              <div className="h-1.5 w-2/3 bg-slate-800 rounded"></div>
-              <div className="h-1 w-full bg-slate-800/50 rounded"></div>
-              <div className="h-1 w-1/2 bg-slate-800/50 rounded"></div>
+            {/* Laptop Hinge & keyboard base */}
+            <div className="w-40 h-1.5 bg-slate-800 rounded-t-sm border-t border-slate-600 relative z-20"></div>
+            {/* Lower bottom chassis */}
+            <div className="w-40 h-2 bg-gradient-to-b from-slate-700 to-slate-900 rounded-b-md shadow-lg border-b border-slate-950 flex justify-center relative z-20">
+              {/* Trackpad */}
+              <div className="w-8 h-1 bg-slate-800/80 rounded-b-sm border-t border-slate-950/20"></div>
             </div>
           </div>
-          
-          {/* Laptop Hinge & keyboard base */}
-          <div className="w-40 h-1.5 bg-slate-800 rounded-t-sm border-t border-slate-600 relative z-20"></div>
-          {/* Lower bottom chassis */}
-          <div className="w-40 h-2 bg-gradient-to-b from-slate-700 to-slate-900 rounded-b-md shadow-lg border-b border-slate-950 flex justify-center relative z-20">
-            {/* Trackpad */}
-            <div className="w-8 h-1 bg-slate-800/80 rounded-b-sm border-t border-slate-950/20"></div>
-          </div>
-        </div>
+        )}
       </div>
       
       <div className="p-6 flex-grow flex flex-col">

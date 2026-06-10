@@ -44,6 +44,7 @@ function AdminDashboardContent() {
   const [loadingProducts, setLoadingProducts] = useState(true);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [showAddForm, setShowAddForm] = useState(false);
+  const [uploadingInline, setUploadingInline] = useState(false);
 
   // Form State
   const [formData, setFormData] = useState({
@@ -165,6 +166,39 @@ function AdminDashboardContent() {
       setMessage({ text: "An error occurred during upload.", type: "error" });
     } finally {
       setUploading(false);
+    }
+  };
+
+  const handleInlineUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFile = e.target.files?.[0];
+    if (!selectedFile) return;
+
+    setUploadingInline(true);
+    setMessage(null);
+
+    const data = new FormData();
+    data.append("file", selectedFile);
+    data.append("category", "products");
+
+    try {
+      const res = await fetch("/api/upload", {
+        method: "POST",
+        body: data
+      });
+      const resData = await res.json();
+
+      if (resData.success) {
+        setFormData((prev) => ({ ...prev, imageUrl: resData.url }));
+        setMessage({ text: "Image uploaded and link attached successfully!", type: "success" });
+        fetchImages();
+      } else {
+        setMessage({ text: resData.error || "Failed to upload file.", type: "error" });
+      }
+    } catch (err) {
+      setMessage({ text: "An error occurred during upload.", type: "error" });
+    } finally {
+      setUploadingInline(false);
+      e.target.value = "";
     }
   };
 
@@ -554,8 +588,24 @@ function AdminDashboardContent() {
                         value={formData.imageUrl}
                         onChange={handleInputChange}
                         placeholder="Paste URL copied from uploader (e.g. /uploads/products/...)"
-                        className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm focus:border-blue-500 outline-none"
+                        className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm focus:border-blue-500 outline-none mb-3"
                       />
+                      <div className="flex items-center gap-3">
+                        <span className="text-[10px] text-slate-500 font-bold uppercase tracking-widest">OR</span>
+                        <label className={`cursor-pointer bg-slate-900 border border-slate-800 hover:border-blue-500/50 hover:bg-slate-800 text-slate-300 hover:text-white font-bold text-xs uppercase tracking-wider px-4 py-2 rounded-lg transition-all flex items-center gap-2 ${uploadingInline ? 'opacity-50 cursor-not-allowed' : ''}`}>
+                          {uploadingInline ? (
+                            <>
+                              <span className="w-3 h-3 rounded-full border-2 border-slate-500 border-t-white animate-spin"></span>
+                              Uploading...
+                            </>
+                          ) : (
+                            <>
+                              <span>💻</span> Upload from Desktop
+                            </>
+                          )}
+                          <input type="file" accept="image/*" className="hidden" onChange={handleInlineUpload} disabled={uploadingInline} />
+                        </label>
+                      </div>
                     </div>
                     <div className="flex items-center gap-3 pt-6">
                       <input

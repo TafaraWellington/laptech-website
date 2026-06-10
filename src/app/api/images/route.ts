@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 export const dynamic = 'force-dynamic';
-import { supabase } from "@/lib/supabase";
+import path from "path";
+import { promises as fs } from "fs";
 
 export async function GET(req: NextRequest) {
   try {
@@ -17,36 +18,27 @@ export async function GET(req: NextRequest) {
     const result: Record<string, string[]> = {};
 
     for (const cat of categoriesToRead) {
-      // List files inside the category folder in the 'laptech_media' bucket
-      const { data: files, error } = await supabase.storage
-        .from('laptech_media')
-        .list(cat);
-
-      if (error) {
-        console.error(`Error listing folder ${cat} in Supabase storage:`, error);
-        result[cat] = [];
-        continue;
-      }
-
-      if (files) {
-        // Filter out any default placeholder/folder files, and map to public URLs
+      const uploadDir = path.join(process.cwd(), "public", "uploads", cat);
+      
+      try {
+        const files = await fs.readdir(uploadDir);
         const imageFiles = files
-          .filter(file => file.name !== ".emptyFolderPlaceholder")
-          .map(file => {
-            const { data } = supabase.storage
-              .from('laptech_media')
-              .getPublicUrl(`${cat}/${file.name}`);
-            return data.publicUrl;
-          });
+          .filter(file => file !== ".emptyFolderPlaceholder")
+          .map(file => `/uploads/${cat}/${file}`);
         result[cat] = imageFiles;
-      } else {
-        result[cat] = [];
+      } catch (err: any) {
+        if (err.code === "ENOENT") {
+          result[cat] = [];
+        } else {
+          console.error(`Error listing folder ${cat}:`, err);
+          result[cat] = [];
+        }
       }
     }
 
     return NextResponse.json({ success: true, images: result });
   } catch (error: any) {
-    console.error("Failed to read images from Supabase storage:", error);
+    console.error("Failed to read images:", error);
     return NextResponse.json({ error: "Failed to load upload gallery" }, { status: 500 });
   }
 }
