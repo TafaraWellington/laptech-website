@@ -97,6 +97,8 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
                 "/uploads/Laptech deals/Dell Precision 3560 No1 (3).png",
                 "/uploads/Laptech deals/Dell Precision 3560 No1 (4).png"
               ]} />
+            ) : product.imageUrl ? (
+              <img src={product.imageUrl} alt={product.model} className="w-full h-full object-contain relative z-10 p-8 transform hover:scale-105 transition-transform duration-500 ease-out" />
             ) : (
               <div className="relative w-80 h-56 flex flex-col items-center justify-end z-10 scale-125 md:scale-150">
                 <div className="relative w-72 h-44 bg-slate-950 rounded-lg border-2 border-slate-700 p-2 shadow-[0_10px_40px_rgba(0,0,0,0.8)] flex flex-col justify-between overflow-hidden">
