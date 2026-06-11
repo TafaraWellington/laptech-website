@@ -19,6 +19,7 @@ type ProductUI = {
   originalPrice?: number | null
   promoPrice?: number | null
   quantity: number
+  imageUrl?: string | null
   isNew: boolean
 }
 
