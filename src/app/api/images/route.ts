@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 export const dynamic = 'force-dynamic';
-import path from "path";
-import { promises as fs } from "fs";
+import { supabase } from "@/lib/supabase";
 
 export async function GET(req: NextRequest) {
   try {
@@ -9,8 +8,6 @@ export async function GET(req: NextRequest) {
     const category = searchParams.get("category");
 
     const allowedCategories = ["products", "schools", "servers", "repairs"];
-    
-    // If no category specified, return all images grouped by category
     const categoriesToRead = category && allowedCategories.includes(category) 
       ? [category] 
       : allowedCategories;
@@ -18,21 +15,24 @@ export async function GET(req: NextRequest) {
     const result: Record<string, string[]> = {};
 
     for (const cat of categoriesToRead) {
-      const uploadDir = path.join(process.cwd(), "public", "uploads", cat);
-      
-      try {
-        const files = await fs.readdir(uploadDir);
-        const imageFiles = files
-          .filter(file => file !== ".emptyFolderPlaceholder")
-          .map(file => `/uploads/${cat}/${file}`);
-        result[cat] = imageFiles;
-      } catch (err: any) {
-        if (err.code === "ENOENT") {
-          result[cat] = [];
-        } else {
-          console.error(`Error listing folder ${cat}:`, err);
-          result[cat] = [];
-        }
+      const { data, error } = await supabase.storage
+        .from("laptech_media")
+        .list(cat, {
+          limit: 100,
+          offset: 0,
+          sortBy: { column: 'created_at', order: 'desc' }
+        });
+
+      if (error) {
+        console.error(`Error listing folder ${cat}:`, error);
+        result[cat] = [];
+      } else {
+        result[cat] = data
+           .filter(file => file.name !== '.emptyFolderPlaceholder')
+           .map(file => {
+              const { data: urlData } = supabase.storage.from("laptech_media").getPublicUrl(`${cat}/${file.name}`);
+              return urlData.publicUrl;
+           });
       }
     }
 

@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import path from "path";
-import { promises as fs } from "fs";
+import { supabase } from "@/lib/supabase";
 
 export async function POST(req: NextRequest) {
   try {
@@ -27,23 +26,28 @@ export async function POST(req: NextRequest) {
     // Generate clean filename
     const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
     const sanitizedFilename = file.name.replace(/[^a-zA-Z0-9.]/g, "_");
-    const filename = `${uniqueSuffix}-${sanitizedFilename}`;
+    const filename = `${category}/${uniqueSuffix}-${sanitizedFilename}`;
 
-    // Upload to local public/uploads folder
-    const uploadDir = path.join(process.cwd(), "public", "uploads", category);
-    
-    // Ensure directory exists
-    await fs.mkdir(uploadDir, { recursive: true });
-    
-    const filePath = path.join(uploadDir, filename);
-    await fs.writeFile(filePath, buffer);
+    const { data, error } = await supabase.storage
+      .from("laptech_media")
+      .upload(filename, buffer, {
+        contentType: file.type,
+        upsert: false
+      });
 
-    const publicUrl = `/uploads/${category}/${filename}`;
+    if (error) {
+       console.error("Supabase upload error:", error);
+       return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+
+    const { data: publicUrlData } = supabase.storage
+      .from("laptech_media")
+      .getPublicUrl(filename);
 
     return NextResponse.json({ 
       success: true, 
-      url: publicUrl,
-      filename: `${category}/${filename}`,
+      url: publicUrlData.publicUrl,
+      filename: filename,
       category: category
     });
   } catch (error: any) {
